@@ -1,5 +1,6 @@
 import datetime
 import os.path
+import time
 
 import yaml
 from bs4 import BeautifulSoup as bs
@@ -72,10 +73,11 @@ def send_msg(text):
         try:
             resp = requests.post(Config.telega_api, data={'chat_id': Config.chat_id, 'text': text, 'parse_mode': 'HTML'}, verify=False)
             print(resp.status_code)
-            break
-        except:
+            return
+        except Exception as e:
+            print(e.__str__())
             retry = retry - 1
-
+    print("GG with notifying")
 
 def get_last_id(iid=None):
     if iid is None:
@@ -110,6 +112,7 @@ def test():
                f"<b>Тело:</b> <code>{parse_body(bodyk)}</code>\n"
         send_msg(text)
         print(text[:160])
+        time.sleep(5)
         get_last_id(iid=item.id)
 
 
